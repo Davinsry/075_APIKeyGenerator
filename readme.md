@@ -86,7 +86,7 @@ Ikuti langkah ini untuk menjalankan proyek di komputer lokal Anda:
 
 ## 👨‍💻 Author
 
-**Nama Anda**
+**Davin**
 * GitHub: [@Davinsry](https://github.com/Davinsry)
 
 ---
