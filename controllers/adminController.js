@@ -100,3 +100,33 @@ exports.updateApiKey = async (req, res) => {
   }
 };
 
+exports.createDefaultAdmin = async () => {
+  try {
+    const email = process.env.ADMIN_EMAIL;
+    const password = process.env.ADMIN_PASSWORD;
+
+    // Cek apakah variabel env sudah diisi
+    if (!email || !password) {
+      console.log('⚠️ Harap set ADMIN_EMAIL dan ADMIN_PASSWORD di .env untuk membuat admin otomatis.');
+      return;
+    }
+
+    // Cek apakah admin sudah ada di database
+    const existingAdmin = await Admin.findOne({ where: { email: email } });
+
+    if (!existingAdmin) {
+      // Jika belum ada, buat admin baru
+      // Password akan otomatis di-hash karena kita sudah punya 'beforeCreate' di model Admin
+      await Admin.create({
+        email: email,
+        password: password
+      });
+      console.log(`✅ Default Admin berhasil dibuat: ${email}`);
+    } else {
+      // Jika sudah ada, diam saja
+      console.log(`ℹ️ Admin ${email} sudah tersedia.`);
+    }
+  } catch (error) {
+    console.error('❌ Gagal membuat default admin:', error.message);
+  }
+};
