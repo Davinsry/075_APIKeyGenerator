@@ -3,175 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galactic API Portal</title>
+    <title>Galactic API | Event Horizon</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. Setup Dasar & Latar Luar Angkasa */
-        body {
+        /* --- PERBAIKAN SIMETRIS DI SINI --- */
+        /* Global Reset: Menjamin padding tidak merusak perhitungan lebar */
+        * {
             margin: 0;
             padding: 0;
-            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-            height: 100vh;
-            overflow: hidden; /* Mencegah scrollbar muncul karena animasi */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            box-sizing: border-box;
+        }
+
+        /* --- 1. LAYOUT --- */
+        body {
+            overflow: hidden; /* Mencegah scrollbar */
+            background-color: #000;
             font-family: 'Poppins', sans-serif;
-            color: white;
+            height: 100vh;
+            /* Teknik Centering paling ampuh: Flexbox */
+            display: flex;
+            justify-content: center; /* Tengah secara Horizontal (Kanan-Kiri) */
+            align-items: center; /* Tengah secara Vertikal (Atas-Bawah) */
         }
 
-        /* 2. Container untuk Bintang & Animasi */
-        .night {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform: rotateZ(45deg);
-            z-index: -1; /* Taruh di belakang form */
-        }
-
-        /* 3. Membuat Bintang Jatuh (Shooting Stars) dengan CSS */
-        .shooting_star {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            height: 2px;
-            background: linear-gradient(-45deg, #5f91ff, rgba(0, 0, 255, 0));
-            border-radius: 999px;
-            filter: drop-shadow(0 0 6px #699bff);
-            animation: tail 3000ms ease-in-out infinite, shooting 3000ms ease-in-out infinite;
-        }
-
-        .shooting_star::before {
-            content: '';
-            position: absolute;
-            top: calc(50% - 1px);
-            right: 0;
-            height: 2px;
-            background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #5f91ff, rgba(0, 0, 255, 0));
-            transform: translateX(50%) rotateZ(45deg);
-            border-radius: 100%;
-            animation: shining 3000ms ease-in-out infinite;
-        }
-
-        .shooting_star::after {
-            content: '';
-            position: absolute;
-            top: calc(50% - 1px);
-            right: 0;
-            height: 2px;
-            background: linear-gradient(-45deg, rgba(0, 0, 255, 0), #5f91ff, rgba(0, 0, 255, 0));
-            transform: translateX(50%) rotateZ(45deg);
-            border-radius: 100%;
-            animation: shining 3000ms ease-in-out infinite;
-        }
-
-        /* Mengatur posisi random untuk setiap bintang jatuh */
-        .shooting_star:nth-child(1) { top: calc(50% - 100px); left: calc(50% - 250px); animation-delay: 2200ms; }
-        .shooting_star:nth-child(1)::before, .shooting_star:nth-child(1)::after { animation-delay: 2200ms; }
-        
-        .shooting_star:nth-child(2) { top: calc(50% - 50px); left: calc(50% - 180px); animation-delay: 4500ms; }
-        .shooting_star:nth-child(2)::before, .shooting_star:nth-child(2)::after { animation-delay: 4500ms; }
-        
-        .shooting_star:nth-child(3) { top: calc(50% - 0px); left: calc(50% - 150px); animation-delay: 7000ms; }
-        .shooting_star:nth-child(3)::before, .shooting_star:nth-child(3)::after { animation-delay: 7000ms; }
-
-        .shooting_star:nth-child(4) { top: calc(50% - 150px); left: calc(50% - 50px); animation-delay: 1500ms; }
-        .shooting_star:nth-child(4)::before, .shooting_star:nth-child(4)::after { animation-delay: 1500ms; }
-
-        /* Keyframes Animasi */
-        @keyframes tail {
-            0% { width: 0; }
-            30% { width: 100px; }
-            100% { width: 0; }
-        }
-        @keyframes shooting {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(300px); }
-        }
-        @keyframes shining {
-            0% { width: 0; }
-            50% { width: 30px; }
-            100% { width: 0; }
-        }
-
-        /* 4. Efek Bintang Statis (Stars) */
-        .stars {
+        /* Canvas Three.js di belakang */
+        canvas {
+            display: block;
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            /* Trik membuat banyak titik putih dengan box-shadow */
-            box-shadow: 
-                10vw 10vh #fff, 20vw 40vh #fff, 50vw 80vh #FFF, 80vw 10vh #FFF, 
-                5vw 90vh #fff, 85vw 85vh #fff, 40vw 20vh #FFF, 60vw 50vh #FFF,
-                15vw 65vh #fff, 90vw 30vh #fff; 
-            animation: twinkle 5s infinite alternate;
-            z-index: -2;
-        }
-        
-        /* Membuat bintang ukuran kecil */
-        .stars::after {
-            content: " ";
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: transparent;
-            box-shadow: 
-                5vw 5vh #fff, 25vw 35vh #fff, 55vw 75vh #FFF, 75vw 15vh #FFF, 
-                10vw 85vh #fff, 80vw 80vh #fff, 45vw 25vh #FFF, 65vw 45vh #FFF;
+            z-index: -1; /* Pastikan di belakang form */
         }
 
-        @keyframes twinkle {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
-        }
-
-        /* 5. Kartu Form (Dark Glassmorphism) */
+        /* --- 2. FORM STYLING (Glassmorphism) --- */
         .card {
-            background: rgba(0, 0, 0, 0.6); /* Hitam transparan */
-            backdrop-filter: blur(12px); /* Efek buram di belakang kaca */
-            -webkit-backdrop-filter: blur(12px);
-            width: 100%;
-            max-width: 480px;
+            /* Kaca Transparan Gelap */
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            
+            /* Pengaturan Lebar */
+            width: 90%; /* Gunakan 90% agar ada jarak di HP layar kecil */
+            max-width: 480px; /* Maksimal lebar di layar besar */
+            /* Margin auto sebagai jaminan tambahan agar di tengah */
+            margin: 0 auto; 
+            
             padding: 40px;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 40px rgba(0, 100, 255, 0.2); /* Glow biru */
-            animation: float 6s ease-in-out infinite;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 50px rgba(255, 100, 50, 0.1); 
+            
+            /* Animasi Masuk */
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+            animation-delay: 0.5s; 
+            color: white;
+            z-index: 10;
+            /* Pastikan posisi relatif agar z-index berfungsi */
+            position: relative; 
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
 
         h2 {
-            font-family: 'Orbitron', sans-serif; /* Font Sci-fi */
+            font-family: 'Orbitron', sans-serif;
             text-align: center;
             margin-bottom: 10px;
-            letter-spacing: 2px;
-            color: #4deeea; /* Cyan neon */
-            text-shadow: 0 0 10px rgba(77, 238, 234, 0.5);
+            letter-spacing: 3px;
+            color: #ffaa55; /* Warna Accretion Disk */
+            text-shadow: 0 0 15px rgba(255, 100, 0, 0.6);
         }
 
         p.subtitle {
             text-align: center;
-            color: #aaa;
-            font-size: 13px;
+            color: #ccc;
+            font-size: 12px;
             margin-bottom: 30px;
+            letter-spacing: 1px;
         }
 
         /* Input Styling */
-        .form-group { margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; width: 100%; }
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-size: 12px;
-            color: #4deeea;
+            font-size: 11px;
+            color: #ffaa55;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
@@ -180,47 +100,49 @@
             width: 100%;
             padding: 12px 15px;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(77, 238, 234, 0.3);
+            border: 1px solid rgba(255, 100, 50, 0.3);
             color: white;
-            border-radius: 8px;
+            border-radius: 6px;
             font-family: 'Poppins', sans-serif;
             outline: none;
             transition: 0.3s;
         }
 
         .form-group input:focus {
-            border-color: #4deeea;
-            box-shadow: 0 0 15px rgba(77, 238, 234, 0.2);
+            border-color: #ffaa55;
+            box-shadow: 0 0 20px rgba(255, 100, 0, 0.3);
             background: rgba(255, 255, 255, 0.1);
         }
 
         /* API Key Box */
         .api-key-wrapper {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px dashed #4deeea;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px dashed #ffaa55;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-bottom: 25px;
             text-align: center;
+            width: 100%;
         }
         .api-key-wrapper input {
             border: none;
             background: transparent;
             text-align: center;
-            color: #ffe600; /* Kuning Emas */
+            color: #fff; 
             font-family: 'Orbitron', sans-serif;
             font-size: 14px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             box-shadow: none;
+            width: 100%;
         }
 
         /* Buttons */
-        .btn-group { display: flex; gap: 15px; }
+        .btn-group { display: flex; gap: 15px; width: 100%; }
         button {
             flex: 1;
             padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
             font-family: 'Orbitron', sans-serif;
@@ -232,21 +154,21 @@
 
         #generateBtn {
             background: transparent;
-            border: 1px solid #4deeea;
-            color: #4deeea;
+            border: 1px solid #ffaa55;
+            color: #ffaa55;
         }
         #generateBtn:hover {
-            background: rgba(77, 238, 234, 0.1);
-            box-shadow: 0 0 20px rgba(77, 238, 234, 0.4);
+            background: rgba(255, 170, 85, 0.1);
+            box-shadow: 0 0 20px rgba(255, 170, 85, 0.4);
         }
 
         #saveBtn {
-            background: linear-gradient(45deg, #4deeea, #764ba2);
+            background: linear-gradient(45deg, #ffaa55, #d65d0e);
             color: white;
         }
         #saveBtn:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(118, 75, 162, 0.6);
+            box-shadow: 0 0 30px rgba(214, 93, 14, 0.6);
         }
 
         /* Admin Button */
@@ -254,65 +176,250 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
+            color: #aaa;
             text-decoration: none;
             border-radius: 30px;
-            font-size: 12px;
-            backdrop-filter: blur(5px);
+            font-size: 11px;
+            font-family: 'Orbitron', sans-serif;
             transition: 0.3s;
+            z-index: 20;
         }
         .admin-btn:hover {
-            background: white;
-            color: black;
+            border-color: #ffaa55;
+            color: #ffaa55;
+        }
+        
+        /* Loading Text untuk Three.js */
+        #loading {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffaa55;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 4px;
+            font-size: 12px;
+            z-index: 5;
+            transition: opacity 1s;
         }
     </style>
 </head>
 <body>
 
-    <a href="login.html" class="admin-btn">Admin Access 🛸</a>
+    <div id="loading">INITIALIZING SINGULARITY...</div>
 
-    <div class="night">
-        <div class="stars"></div>
-        <div class="shooting_star"></div>
-        <div class="shooting_star"></div>
-        <div class="shooting_star"></div>
-        <div class="shooting_star"></div>
-    </div>
+    <a href="login.html" class="admin-btn">ADMIN COMMAND 🛸</a>
 
     <div class="card">
-        <h2>GALACTIC API</h2>
-        <p class="subtitle">Secure Access for Interstellar Data</p>
+        <h2>EVENT HORIZON</h2>
+        <p class="subtitle">Secure Data Transmission Point</p>
         
         <form id="userForm">
             <div class="form-group">
                 <label for="firstName">First Name</label>
-                <input type="text" id="firstName" placeholder="e.g. Luke" required>
+                <input type="text" id="firstName" placeholder="Ex: Cooper" required>
             </div>
             
             <div class="form-group">
                 <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" placeholder="e.g. Skywalker" required>
+                <input type="text" id="lastName" placeholder="Ex: Murph" required>
             </div>
             
             <div class="form-group">
-                <label for="email">Email Comms</label>
-                <input type="email" id="email" placeholder="luke@galaxy.net" required>
+                <label for="email">Comm Frequency (Email)</label>
+                <input type="email" id="email" placeholder="cooper@nasa.gov" required>
             </div>
 
             <div class="api-key-wrapper">
-                <label for="apiKey" style="color: #aaa; font-size: 10px; display:block; margin-bottom:5px;">ACCESS KEY</label>
-                <input type="text" id="apiKey" readonly placeholder="AWAITING GENERATION..." required>
+                <label for="apiKey" style="color: #888; font-size: 10px; display:block; margin-bottom:5px;">QUANTUM KEY</label>
+                <input type="text" id="apiKey" readonly placeholder="WAITING..." required>
             </div>
 
             <div class="btn-group">
                 <button type="button" id="generateBtn">Generate</button>
-                <button type="submit" id="saveBtn">Initialize</button>
+                <button type="submit" id="saveBtn">Transmit</button>
             </div>
         </form>
     </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // SETUP SCENE
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
+        
+        // Posisi Kamera: Black Hole pas di tengah belakang form
+        camera.position.set(0, 30, 160); 
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
+        document.body.appendChild(renderer.domElement);
+
+        // --- OBYEK 1: BLACK HOLE ---
+        const bhGeometry = new THREE.SphereGeometry(18, 64, 64);
+        const bhMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        const blackHole = new THREE.Mesh(bhGeometry, bhMaterial);
+        scene.add(blackHole);
+
+        // --- OBYEK 2: ACCRETION DISK ---
+        const particleCount = 150000; 
+        const particlesGeo = new THREE.BufferGeometry();
+        const posArray = new Float32Array(particleCount * 3);
+        const colorArray = new Float32Array(particleCount * 3);
+        const sizesArray = new Float32Array(particleCount);
+        const randomArray = new Float32Array(particleCount);
+
+        const colorInner = new THREE.Color(0xffddaa); 
+        const colorOuter = new THREE.Color(0xff5500); 
+
+        for(let i = 0; i < particleCount; i++) {
+            const i3 = i * 3;
+            const radiusBase = 20 + Math.random() * 70; 
+            const angle = Math.random() * Math.PI * 2;
+            const thickness = (radiusBase * 0.05) * (Math.random() - 0.5);
+
+            posArray[i3] = Math.cos(angle) * radiusBase;
+            posArray[i3+1] = thickness;
+            posArray[i3+2] = Math.sin(angle) * radiusBase;
+
+            const ratio = (radiusBase - 20) / 70;
+            const mixedColor = colorInner.clone().lerp(colorOuter, ratio);
+            
+            colorArray[i3] = mixedColor.r;
+            colorArray[i3+1] = mixedColor.g;
+            colorArray[i3+2] = mixedColor.b;
+
+            sizesArray[i] = Math.random();
+            randomArray[i] = Math.random();
+        }
+
+        particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        particlesGeo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+        particlesGeo.setAttribute('size', new THREE.BufferAttribute(sizesArray, 1));
+        particlesGeo.setAttribute('aRandom', new THREE.BufferAttribute(randomArray, 1));
+
+        const particlesMat = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime: { value: 0 },
+                uPixelRatio: { value: renderer.getPixelRatio() }
+            },
+            vertexShader: `
+                uniform float uTime;
+                uniform float uPixelRatio;
+                attribute float size;
+                varying vec3 vColor;
+                void main() {
+                    vColor = color;
+                    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+                    float radius = length(modelPosition.xz);
+                    float angle = (100.0 / radius) * uTime * 0.1; 
+                    float x = modelPosition.x * cos(angle) - modelPosition.z * sin(angle);
+                    float z = modelPosition.x * sin(angle) + modelPosition.z * cos(angle);
+                    modelPosition.x = x;
+                    modelPosition.z = z;
+                    vec4 viewPosition = viewMatrix * modelPosition;
+                    gl_Position = projectionMatrix * viewPosition;
+                    gl_PointSize = size * uPixelRatio * (300.0 / -viewPosition.z);
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vColor;
+                void main() {
+                    float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+                    float strength = 0.05 / distanceToCenter - 0.1;
+                    gl_FragColor = vec4(vColor, strength);
+                }
+            `,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const disk = new THREE.Points(particlesGeo, particlesMat);
+        disk.rotation.x = 0.2; 
+        scene.add(disk);
+
+        // --- OBYEK 3: POST PROCESSING (BLOOM) ---
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.strength = 2.5;
+        bloomPass.radius = 0.8;
+        bloomPass.threshold = 0;
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // --- OBYEK 4: BACKGROUND STARS ---
+        const starsGeo = new THREE.BufferGeometry();
+        const starsCount = 2000;
+        const starsPos = new Float32Array(starsCount * 3);
+        for(let i=0; i<starsCount*3; i++) {
+            starsPos[i] = (Math.random() - 0.5) * 3000;
+        }
+        starsGeo.setAttribute('position', new THREE.BufferAttribute(starsPos, 3));
+        const starsMat = new THREE.PointsMaterial({color: 0xffffff, size: 2, sizeAttenuation: false});
+        const starField = new THREE.Points(starsGeo, starsMat);
+        scene.add(starField);
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) - 0.5;
+            mouseY = (e.clientY / window.innerHeight) - 0.5;
+        });
+
+        function animate() {
+            const elapsedTime = clock.getElapsedTime();
+            particlesMat.uniforms.uTime.value = elapsedTime;
+
+            camera.position.x += (mouseX * 20 - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY * 20 + 30 - camera.position.y) * 0.05;
+            camera.lookAt(0, 0, 0);
+
+            composer.render();
+            
+            if(elapsedTime > 0.5) {
+                const loading = document.getElementById('loading');
+                if(loading) loading.style.opacity = 0;
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
 
     <script src="script.js"></script>
 </body>
