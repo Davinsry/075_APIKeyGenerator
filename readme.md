@@ -19,8 +19,10 @@
 
 | **Login Admin** | **MySQL** |
 |:---:|:---:|
-| ![User Interface](./screenshots/login.png) | ![Dashboard](./screenshots/sql.png) |
+| ![User Interface](./screenshots/login.png) | ![Dashboard](./screenshots/users.png) |
 | *Three.js Black Hole Simulation with Glassmorphism* | *Using mySQL* |
+
+[Screenshoot](./screenshots/)
 
 ---
 
