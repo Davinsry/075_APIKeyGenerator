@@ -14,9 +14,7 @@
 
 | **User Interface (Event Horizon)** | **Admin Dashboard (Mars Core)** |
 |:---:|:---:|
-| ![User Interface](<img width="1908" height="898" alt="image" src="https://github.com/user-attachments/assets/b80f3d79-5129-431d-9c10-4b2399579248" />)
-| ![Dashboard](<img width="1918" height="926" alt="image" src="https://github.com/user-attachments/assets/957223c5-9985-4171-8902-9dad19ee9dd0" />
-|
+| ![User Interface](./screenshots/user-ui.png) | ![Dashboard](./screenshots/dashboard-ui.png) |
 | *Three.js Black Hole Simulation with Glassmorphism Form* | *3D Mars Visualization with Holographic Data Grid* |
 
 ---
@@ -89,7 +87,7 @@ Ikuti langkah ini untuk menjalankan proyek di komputer lokal Anda:
 ## 👨‍💻 Author
 
 **Nama Anda**
-* GitHub: [@username-anda](https://github.com/Davinsry)
+* GitHub: [@Davinsry](https://github.com/Davinsry)
 
 ---
 *Built with 🪐 and ☕ code.*
